@@ -1,0 +1,561 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Kelas Literasi Digital</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+<style>
+/* Layout: sticky left rail (course name + 5 sections) beside one reading column; rail collapses to a scrolling tab bar on phones. */
+:root{
+  --bg:#f2f6f6; --surface:#ffffff; --ink:#10242a; --muted:#536a70; --line:#d6e1e2;
+  --accent:#0a6c74; --accent-ink:#ffffff; --accent-soft:#ddefef;
+  --ok:#17794a; --ok-soft:#dcf3e6; --bad:#b42318; --bad-soft:#fde4e1; --warn:#8f5200; --warn-soft:#fbefd5;
+  --font-display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c191c; --surface:#132327; --ink:#e5f0f1; --muted:#94aaae; --line:#25393e;
+    --accent:#4cc3cb; --accent-ink:#06292c; --accent-soft:#14363c;
+    --ok:#52c98c; --ok-soft:#133323; --bad:#f2877f; --bad-soft:#3b1916; --warn:#e6b25c; --warn-soft:#3a2a0e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c191c; --surface:#132327; --ink:#e5f0f1; --muted:#94aaae; --line:#25393e;
+  --accent:#4cc3cb; --accent-ink:#06292c; --accent-soft:#14363c;
+  --ok:#52c98c; --ok-soft:#133323; --bad:#f2877f; --bad-soft:#3b1916; --warn:#e6b25c; --warn-soft:#3a2a0e;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.25;margin:0;text-wrap:balance}
+h1{font-size:clamp(26px,4.4vw,36px);font-weight:800;letter-spacing:-.015em}
+h2{font-size:20px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+h4{font-size:14px;font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px;max-width:1100px;margin:0 auto;padding-block:28px 56px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 28px);align-self:start;display:flex;flex-direction:column;gap:22px}
+.brand{display:flex;gap:12px;align-items:center}
+.mark{width:40px;height:40px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:800 15px var(--font-display);letter-spacing:.02em;flex:none}
+.brand b{display:block;font:700 15px/1.2 var(--font-display)}
+.brand span{font-size:12px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:block;padding:9px 12px;border-radius:7px;text-decoration:none;color:var(--muted);font-weight:500;white-space:nowrap}
+.nav a:hover{background:var(--accent-soft);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+main{display:flex;flex-direction:column;gap:28px;min-width:0}
+.eyebrow{font:600 12px var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);max-width:62ch}
+.hero{display:flex;flex-direction:column;gap:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-size:13px;padding-top:4px}
+.meta b{color:var(--ink);font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.section{display:flex;flex-direction:column;gap:12px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.btn{font:600 14px var(--font-body);border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.danger{background:transparent;color:var(--bad);border-color:var(--bad)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{background:var(--accent-soft);border-radius:8px;padding:10px 14px;font-size:14px}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.ok{background:var(--ok-soft);color:var(--ok)}
+.note.bad{background:var(--bad-soft);color:var(--bad)}
+.pill{display:inline-block;font:600 12px var(--font-body);padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--font-body);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+details.mod{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+details.mod>summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;gap:14px;align-items:center}
+details.mod>summary::-webkit-details-marker{display:none}
+.wk{font-size:12px;color:var(--muted)}
+.mod-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.chev{transition:transform .15s;color:var(--muted)}
+details[open]>summary .chev{transform:rotate(90deg)}
+.mod-body{padding:4px 20px 20px;display:flex;flex-direction:column;gap:16px;border-top:1px solid var(--line);padding-top:18px}
+.mod-body .pt{display:flex;flex-direction:column;gap:3px}
+.mod-body .pt p{max-width:68ch}
+dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:14px}
+dt{font-weight:600}
+dd{margin:0;color:var(--muted)}
+.try{border-left:3px solid var(--accent);padding:4px 0 4px 14px}
+.done{display:flex;gap:8px;align-items:center;font-weight:500}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.qn{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}
+.opt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.why{font-size:14px;color:var(--muted)}
+.score{font:800 44px var(--font-display);letter-spacing:-.02em}
+label.f{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:13px}
+input[type=text],input[type=url],textarea{font:400 15px var(--font-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+textarea{min-height:96px;resize:vertical}
+input[type=file]{font:400 14px var(--font-body);color:var(--ink);max-width:100%}
+.hint{font-weight:400;color:var(--muted);font-size:13px}
+.ann{display:flex;flex-direction:column;gap:6px}
+.ann time{font-size:12px;color:var(--muted)}
+.ann p{white-space:pre-wrap;max-width:68ch}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted);text-align:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font:800 26px var(--font-display)}
+.stat span{font-size:13px;color:var(--muted)}
+@media (max-width:820px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:18px;padding-block:0 48px}
+  .rail{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding-block:12px 0;gap:8px;border-bottom:1px solid var(--line)}
+  .nav{flex-direction:row;overflow-x:auto;gap:0}
+  .nav a{border-radius:0;padding:10px 14px;border-bottom:2px solid transparent}
+  .nav a[aria-current="page"]{background:transparent;border-bottom-color:var(--accent)}
+  dl{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="brand"><div class="mark" aria-hidden="true">LD</div><div><b>Literasi Digital</b><span>Kelas daring · Semester Ganjil</span></div></div>
+    <nav class="nav" aria-label="Menu kelas">
+      <a href="#beranda" data-v="beranda">Beranda</a>
+      <a href="#materi" data-v="materi">Materi</a>
+      <a href="#kuis" data-v="kuis">Kuis</a>
+      <a href="#tugas" data-v="tugas">Tugas</a>
+      <a href="#pengumuman" data-v="pengumuman">Pengumuman</a>
+      <a href="#pengajar" data-v="pengajar" id="nav-pengajar" hidden>Ruang pengajar</a>
+    </nav>
+  </aside>
+  <main id="main" aria-live="polite"></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Data kelas ---------- */
+var DEADLINE = new Date("2026-11-27T23:59:00+07:00").getTime();
+var MODUL = [
+  {id:"m1", t:"Memeriksa informasi sebelum dipercaya", wk:"Pekan 1 · 16–22 Nov 2026", min:35,
+   ringkas:"Satu klaim bisa menyebar ke ribuan orang dalam hitungan menit. Modul ini melatih kebiasaan memeriksa sebelum membagikan.",
+   poin:[
+    ["Bedakan misinformasi dan disinformasi","Misinformasi adalah informasi keliru yang disebarkan tanpa niat menipu. Disinformasi sengaja dibuat untuk menyesatkan. Keduanya sama-sama merugikan, tetapi cara menanganinya berbeda."],
+    ["Gunakan empat langkah SIFT","Stop (berhenti sebentar), Investigate the source (kenali siapa penyebarnya), Find better coverage (cari liputan dari sumber lain), Trace claims (telusuri klaim, kutipan, dan media ke asalnya)."],
+    ["Periksa gambar","Pencarian gambar terbalik lewat Google Lens atau TinEye menunjukkan kapan dan di mana foto pertama kali muncul. Foto lama sering dipakai ulang dengan keterangan baru."],
+    ["Kenali pemicu emosi","Judul yang membuat marah atau takut dirancang agar cepat dibagikan. Jeda 30 detik sebelum menekan tombol bagikan sudah mengurangi risiko ikut menyebarkan."]],
+   istilah:[["Hoaks","Kabar bohong yang dikemas seperti berita sungguhan."],["Clickbait","Judul yang memancing klik tanpa isi yang sepadan."],["Cek fakta","Proses menelusuri klaim ke bukti dan sumber asalnya."]],
+   latihan:"Ambil satu pesan berantai dari grup keluarga atau kelas. Terapkan keempat langkah SIFT dan catat hasil tiap langkah dalam tiga kalimat."},
+  {id:"m2", t:"Mengamankan akun dan data pribadi", wk:"Pekan 2 · 23–29 Nov 2026", min:40,
+   ringkas:"Sebagian besar pembobolan akun terjadi karena kata sandi yang lemah atau tautan palsu, bukan karena peretasan yang rumit.",
+   poin:[
+    ["Pakai frasa sandi yang panjang","Rangkaian empat kata acak atau lebih, misalnya kopi-senja-ladang-biru, lebih sulit ditebak dan lebih mudah diingat daripada satu kata ditambah angka. Gunakan sandi berbeda untuk setiap akun penting."],
+    ["Aktifkan autentikasi dua faktor (2FA)","Setelah memasukkan sandi, sistem meminta kode dari aplikasi autentikator atau kunci keamanan. Aplikasi autentikator lebih aman daripada kode lewat SMS."],
+    ["Kenali phishing","Pesan yang mendesak, meminta kode OTP, atau mengarahkan ke alamat situs yang mirip tetapi tidak sama adalah tanda bahaya. Jangan membagikan OTP kepada siapa pun, termasuk yang mengaku petugas bank atau admin platform."],
+    ["Ketahui hak atas data pribadi","Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi memberi pemilik data sejumlah hak, antara lain mengakses, memperbaiki, dan meminta penghapusan datanya sesuai ketentuan undang-undang."]],
+   istilah:[["Phishing","Penipuan yang menyamar sebagai pihak tepercaya untuk mencuri data."],["OTP","Kode sekali pakai yang berlaku singkat."],["Pengelola sandi","Aplikasi yang membuat dan menyimpan sandi unik untuk tiap akun."]],
+   latihan:"Buka pengaturan keamanan di salah satu akun Anda. Catat apakah 2FA aktif, perangkat apa saja yang sedang masuk, dan satu hal yang akan Anda ubah hari ini."},
+  {id:"m3", t:"Jejak digital dan etika bermedia", wk:"Pekan 3 · 30 Nov–6 Des 2026", min:35,
+   ringkas:"Setiap unggahan, komentar, dan lokasi yang dibagikan membentuk profil yang bisa dibaca orang lain, sekarang maupun bertahun-tahun lagi.",
+   poin:[
+    ["Jejak aktif dan pasif","Jejak aktif adalah yang Anda unggah dengan sengaja, seperti foto dan komentar. Jejak pasif terkumpul tanpa terasa, seperti riwayat penelusuran, alamat IP, dan data lokasi."],
+    ["Pikirkan sebelum mengunggah","Tanyakan tiga hal: apakah aman jika dibaca calon pemberi kerja, apakah ada orang lain di foto yang belum setuju, dan apakah ada data pribadi seperti nomor rumah atau nama sekolah."],
+    ["Berkomentar dengan santun","Kritik ditujukan pada gagasan, bukan pada pribadi. Perundungan siber berdampak serius bagi korban, dan sebagian perilaku daring dapat berurusan dengan hukum, misalnya pencemaran nama baik menurut UU ITE."],
+    ["Atur privasi secara berkala","Periksa siapa yang bisa melihat unggahan, tag, dan lokasi. Tinjau pengaturan setiap beberapa bulan karena platform sering mengubah pengaturan bawaannya."]],
+   istilah:[["Jejak digital","Data yang tertinggal dari semua aktivitas daring Anda."],["Netiket","Tata krama berinteraksi di internet."],["Doxing","Menyebarkan data pribadi seseorang tanpa izin."]],
+   latihan:"Cari nama Anda sendiri di mesin pencari dan di dua media sosial. Catat tiga hal yang bisa ditemukan orang asing, lalu putuskan mana yang perlu disembunyikan."},
+  {id:"m4", t:"Menulis dan mengutip secara bertanggung jawab", wk:"Pekan 4 · 7–13 Des 2026", min:40,
+   ringkas:"Menemukan bahan itu mudah. Memakainya dengan jujur adalah keterampilan yang perlu dilatih.",
+   poin:[
+    ["Apa itu plagiarisme","Mengambil gagasan atau kalimat orang lain tanpa menyebut sumbernya. Parafrase tetap memerlukan sitasi karena gagasannya bukan milik Anda."],
+    ["Kutip dengan format yang konsisten","Pilih satu gaya, misalnya APA, lalu pakai di seluruh tulisan. Setiap kutipan di dalam teks harus punya entri di daftar pustaka."],
+    ["Nilai kualitas sumber","Utamakan sumber yang menyebut penulis, tanggal, dan metode. Jurnal ilmiah, laporan lembaga resmi, dan media dengan redaksi yang jelas lebih dapat dipertanggungjawabkan daripada unggahan anonim."],
+    ["Hak cipta dan alat bantu AI","Karya orang lain umumnya dilindungi hak cipta, jadi cari lisensi terbuka seperti Creative Commons bila ingin memakainya. Jika memakai alat AI, ikuti aturan kelas dan sebutkan bagian mana yang dibantu."]],
+   istilah:[["Parafrase","Menyampaikan ulang gagasan dengan kata-kata sendiri."],["Sitasi","Penyebutan sumber di dalam teks."],["Daftar pustaka","Daftar lengkap sumber yang dirujuk, di akhir tulisan."]],
+   latihan:"Pilih satu paragraf dari artikel berita. Tulis ulang dengan kata-kata sendiri, tambahkan sitasi gaya APA, lalu bandingkan dengan aslinya."}
+];
+
+var QUIZ = [
+  {q:"Anda menemukan kabar mengejutkan di grup chat. Langkah SIFT yang pertama adalah...",
+   o:["Membagikannya ke grup lain agar yang lain waspada","Berhenti sejenak dan tidak langsung bereaksi","Mengomentari dengan pendapat Anda","Mencari siapa yang paling dulu membagikannya"],a:1,
+   w:"S pada SIFT berarti Stop. Jeda singkat mencegah Anda ikut menyebarkan sebelum tahu kebenarannya."},
+  {q:"Manakah ciri yang paling kuat menandakan pesan phishing?",
+   o:["Menggunakan bahasa baku","Dikirim pada malam hari","Meminta kode OTP atau sandi dengan nada mendesak lewat sebuah tautan","Berisi logo perusahaan"],a:2,
+   w:"Desakan waktu ditambah permintaan OTP atau sandi adalah pola khas phishing. Logo dan bahasa mudah ditiru."},
+  {q:"Manakah kata sandi yang paling kuat?",
+   o:["Budi2008","kopi-senja-ladang-biru-47","passw0rd!","12345678"],a:1,
+   w:"Frasa sandi yang panjang dan acak lebih sulit ditebak dibanding kata umum dengan pengganti huruf atau angka."},
+  {q:"Apa fungsi utama autentikasi dua faktor (2FA)?",
+   o:["Menambah verifikasi kedua selain kata sandi","Mengganti kata sandi dengan sidik jari saja","Menghapus riwayat penelusuran","Mempercepat proses masuk"],a:0,
+   w:"2FA meminta bukti kedua, sehingga sandi yang bocor saja tidak cukup untuk membuka akun Anda."},
+  {q:"Contoh jejak digital pasif adalah...",
+   o:["Foto yang Anda unggah","Komentar di sebuah video","Status yang Anda tulis","Riwayat lokasi dan alamat IP yang tercatat otomatis"],a:3,
+   w:"Jejak pasif terkumpul tanpa Anda mengunggah apa pun, misalnya data lokasi, alamat IP, dan riwayat penelusuran."},
+  {q:"Undang-Undang Nomor 27 Tahun 2022 mengatur tentang...",
+   o:["Hak cipta","Pelindungan data pribadi","Perlindungan konsumen","Sistem pendidikan nasional"],a:1,
+   w:"UU No. 27 Tahun 2022 adalah Undang-Undang Pelindungan Data Pribadi."},
+  {q:"Mengapa parafrase tetap perlu disertai sitasi?",
+   o:["Agar tulisan lebih panjang","Karena kalimatnya sama dengan aslinya","Karena gagasannya berasal dari orang lain","Supaya tidak perlu daftar pustaka"],a:2,
+   w:"Yang dilindungi bukan hanya kalimat, tetapi juga gagasan. Sitasi memberi kredit dan memudahkan pembaca menelusuri sumber."},
+  {q:"Sebuah foto viral diklaim sebagai kejadian kemarin. Cara memeriksa yang paling tepat adalah...",
+   o:["Melihat jumlah suka dan bagikan","Bertanya kepada teman yang sudah membagikannya","Menganggapnya benar jika banyak yang menyebarkan","Pencarian gambar terbalik untuk menemukan kemunculan paling awal"],a:3,
+   w:"Pencarian gambar terbalik menunjukkan asal foto dan tanggal awal kemunculannya. Popularitas tidak membuktikan kebenaran."}
+];
+
+var RUBRIK = [
+  ["Ketepatan verifikasi klaim (langkah SIFT terdokumentasi)",40],
+  ["Kualitas sumber dan sitasi",25],
+  ["Analisis pengaturan privasi akun",20],
+  ["Kejelasan dan kerapian tulisan",15]
+];
+
+var VIEWS = ["beranda","materi","kuis","tugas","pengumuman","pengajar"];
+var FILE_TYPES = {pdf:"application/pdf",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",webp:"image/webp",txt:"text/plain",csv:"text/csv",md:"text/markdown"};
+
+/* ---------- Utilitas ---------- */
+var main = document.getElementById("main");
+var navP = document.getElementById("nav-pengajar");
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var fmtDT = new Intl.DateTimeFormat("id-ID",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Jakarta"});
+function fmt(ts){return ts?fmtDT.format(new Date(ts))+" WIB":"-"}
+function safeUrl(u){try{var x=new URL(u);return (x.protocol==="https:"||x.protocol==="http:")?x.href:""}catch(e){return ""}}
+function fmtSize(b){return b>1048576?(b/1048576).toFixed(1)+" MB":Math.max(1,Math.round(b/1024))+" KB"}
+
+var S = {view:"beranda", user:null, db:null, assets:null, uid:null, isEditor:false, canWrite:null,
+  attempt:null, submission:null, anns:[], annLoaded:false, annSlow:false, allAttempts:[], allSubs:[], names:{},
+  ans:QUIZ.map(function(){return null}), graded:false, saveMsg:"", draft:{fullName:"",note:"",link:""}, draftInit:false,
+  armed:"", busy:false};
+
+function loadProg(){try{return JSON.parse(localStorage.getItem("lms-literasi-progress")||"{}")}catch(e){return {}}}
+function saveProg(p){try{localStorage.setItem("lms-literasi-progress",JSON.stringify(p))}catch(e){}}
+function progCount(){var p=loadProg();return MODUL.filter(function(m){return p[m.id]}).length}
+function canSave(){return !!(S.db&&S.uid&&S.canWrite!==false)}
+
+/* ---------- Tampilan ---------- */
+function progressBlock(){
+  var n=progCount(), pct=Math.round(100*n/MODUL.length);
+  return '<div class="card"><div class="row" style="justify-content:space-between"><h3>Kemajuan belajar Anda</h3><span class="wk" data-prog-text>'+n+' dari '+MODUL.length+' modul selesai</span></div>'+
+    '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i data-prog-bar style="width:'+pct+'%"></i></div>'+
+    '<p class="hint">Centang modul yang sudah selesai di halaman Materi. Tanda ini tersimpan di peramban perangkat ini.</p></div>';
+}
+
+function viewBeranda(){
+  var jadwal=MODUL.map(function(m,i){return '<tr><td>'+esc(m.wk)+'</td><td>'+esc(m.t)+'</td><td>'+(i===0?'Kuis dibuka':i===1?'Tugas 1 dikumpulkan Jumat, 27 Nov':i===3?'Kuis ditutup oleh pengajar':'Membaca dan latihan mandiri')+'</td></tr>'}).join("");
+  var kuisInfo=S.attempt?'<span class="pill ok">Kuis: nilai terbaik '+S.attempt.best+'</span>':'<span class="pill">Kuis belum dikerjakan</span>';
+  var tugasInfo=S.submission?'<span class="pill ok">Tugas sudah dikumpulkan</span>':'<span class="pill">Tugas belum dikumpulkan</span>';
+  return '<section class="hero"><span class="eyebrow">Kelas daring · 4 pekan</span>'+
+    '<h1>Literasi Digital untuk Pelajar</h1>'+
+    '<p class="lead">Kelas ini membantu Anda memeriksa informasi sebelum membagikannya, menjaga keamanan akun, mengelola jejak digital, dan mengutip sumber dengan jujur. Setiap modul pendek, disertai latihan yang bisa langsung dicoba dengan akun dan perangkat Anda sendiri.</p>'+
+    '<div class="meta"><span><b>4</b> modul</span><span><b>8</b> soal pilihan ganda</span><span><b>1</b> tugas unggah berkas</span><span>Tenggat tugas <b>27 Nov 2026, 23.59 WIB</b></span></div>'+
+    '<div class="row"><a class="btn" href="#materi">Mulai Modul 1</a><a class="btn ghost" href="#pengumuman">Baca petunjuk penggunaan</a></div></section>'+
+    progressBlock()+
+    '<section class="section"><h2>Setelah kelas ini, Anda mampu</h2><ul class="plain">'+
+      '<li>Menelusuri sebuah klaim viral ke sumber aslinya dengan langkah SIFT.</li>'+
+      '<li>Mengaktifkan 2FA dan mengenali tanda-tanda phishing.</li>'+
+      '<li>Mengatur privasi akun dan menilai jejak digital sendiri.</li>'+
+      '<li>Memparafrase, mengutip, dan menyusun daftar pustaka tanpa melakukan plagiarisme.</li></ul></section>'+
+    '<section class="section"><h2>Jadwal</h2><div class="tablewrap"><table><thead><tr><th>Pekan</th><th>Modul</th><th>Kegiatan</th></tr></thead><tbody>'+jadwal+'</tbody></table></div></section>'+
+    '<section class="section"><h2>Penilaian</h2><div class="grid2">'+
+      '<div class="stat"><b>30%</b><span>Kuis pilihan ganda, nilai terbaik dipakai</span></div>'+
+      '<div class="stat"><b>50%</b><span>Tugas 1, dinilai dengan rubrik</span></div>'+
+      '<div class="stat"><b>20%</b><span>Keaktifan membaca materi dan latihan</span></div></div>'+
+      '<div class="row">'+kuisInfo+tugasInfo+'</div></section>';
+}
+
+function viewMateri(){
+  var p=loadProg();
+  var mods=MODUL.map(function(m,i){
+    var poin=m.poin.map(function(x){return '<div class="pt"><h4>'+esc(x[0])+'</h4><p>'+esc(x[1])+'</p></div>'}).join("");
+    var ist=m.istilah.map(function(x){return '<dt>'+esc(x[0])+'</dt><dd>'+esc(x[1])+'</dd>'}).join("");
+    return '<details class="mod"'+(i===0?' open':'')+'><summary><div class="mod-title"><span class="wk">Modul '+(i+1)+' · '+esc(m.wk)+' · ±'+m.min+' menit</span><h3>'+esc(m.t)+'</h3></div>'+
+      '<span class="pill ok" data-done-pill="'+m.id+'"'+(p[m.id]?'':' hidden')+'>Selesai</span><span class="chev" aria-hidden="true">&#9656;</span></summary>'+
+      '<div class="mod-body"><p class="lead">'+esc(m.ringkas)+'</p>'+poin+
+      '<div class="pt"><h4>Istilah kunci</h4><dl>'+ist+'</dl></div>'+
+      '<div class="try"><h4>Coba sendiri</h4><p>'+esc(m.latihan)+'</p></div>'+
+      '<label class="done"><input type="checkbox" data-act="toggle" data-id="'+m.id+'"'+(p[m.id]?' checked':'')+'> Tandai modul ini selesai</label></div></details>';
+  }).join("");
+  return '<section class="hero"><span class="eyebrow">Materi pembelajaran</span><h1>Empat modul, satu per pekan</h1>'+
+    '<p class="lead">Buka modul untuk membaca ringkasan, poin utama, istilah kunci, dan latihan singkat. Anda bebas membaca ulang kapan saja.</p></section>'+
+    progressBlock()+'<div class="section">'+mods+'</div>';
+}
+
+function viewKuis(){
+  var a=S.attempt, n=QUIZ.length;
+  var banner=a?'<div class="note">Nilai terakhir <b>'+a.score+'</b> · terbaik <b>'+a.best+'</b> · percobaan ke-'+a.tries+' · '+esc(fmt(a.at))+'</div>':'';
+  var warn=canSave()?'':'<div class="note warn">Hasil kuis hanya bisa disimpan jika Anda masuk dengan akun yang boleh berpartisipasi. Anda tetap bisa mengerjakan dan melihat pembahasan.</div>';
+  var correct=0;
+  var qs=QUIZ.map(function(q,i){
+    var ch=S.ans[i]; if(S.graded&&ch===q.a) correct++;
+    var opts=q.o.map(function(t,j){
+      var cls="opt"; if(S.graded){ if(j===q.a) cls+=" ok"; else if(j===ch) cls+=" bad"; }
+      return '<label class="'+cls+'"><input type="radio" name="q'+i+'" data-act="answer" data-q="'+i+'" value="'+j+'"'+(ch===j?' checked':'')+(S.graded?' disabled':'')+'><span>'+esc(t)+'</span></label>';
+    }).join("");
+    var why=S.graded?'<p class="why"><b>'+(ch===q.a?'Benar.':'Kurang tepat.')+'</b> '+esc(q.w)+'</p>':'';
+    return '<div class="q" role="radiogroup" aria-labelledby="ql'+i+'"><span class="qn">Soal '+(i+1)+' dari '+n+'</span><h3 id="ql'+i+'">'+esc(q.q)+'</h3>'+opts+why+'</div>';
+  }).join("");
+  var result="";
+  if(S.graded){
+    var sc=Math.round(100*correct/n);
+    result='<div class="card"><span class="eyebrow">Hasil percobaan ini</span><div class="score">'+sc+'</div><p>'+correct+' dari '+n+' soal benar.</p>'+(S.saveMsg?'<div class="note '+(S.saveMsg.indexOf("tersimpan")===0?'ok':'warn')+'">'+esc(S.saveMsg)+'</div>':'')+'<div class="row"><button class="btn" data-act="reset-quiz">Ulangi kuis</button></div></div>';
+  }
+  var answered=S.ans.filter(function(x){return x!==null}).length;
+  var foot=S.graded?'':'<div class="row"><button class="btn" data-act="submit-quiz"'+(S.busy?' disabled':'')+'>Kirim jawaban</button><span class="hint" id="qcount">'+answered+' dari '+n+' soal terjawab</span></div><div id="qmsg"></div>';
+  return '<section class="hero"><span class="eyebrow">Kuis pilihan ganda</span><h1>Uji pemahaman Modul 1–4</h1>'+
+    '<p class="lead">Ada '+n+' soal dengan satu jawaban benar. Setelah dikirim, Anda langsung melihat pembahasan. Kuis boleh diulang dan nilai terbaik yang dipakai.</p></section>'+
+    banner+warn+result+'<div class="section">'+qs+'</div>'+foot;
+}
+
+function viewTugas(){
+  var sub=S.submission, d=S.draft;
+  var left=DEADLINE-Date.now(), days=Math.ceil(left/86400000);
+  var dl=left>0?'<span class="pill">Sisa '+days+' hari</span>':'<span class="pill bad">Tenggat terlewat</span>';
+  var rub=RUBRIK.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+r[1]+'</td></tr>'}).join("");
+  var status="";
+  if(sub){
+    var late=sub.at>DEADLINE;
+    var fl=sub.assetId?'<a href="/_blob/'+esc(sub.assetId)+'" target="_blank" rel="noopener">'+esc(sub.fileName||"Berkas terunggah")+'</a>':'';
+    var lk=safeUrl(sub.link);
+    var lkh=lk?'<a href="'+esc(lk)+'" target="_blank" rel="noopener noreferrer">'+esc(lk)+'</a>':'';
+    status='<div class="card"><div class="row" style="justify-content:space-between"><h3>Pengumpulan Anda</h3><span class="pill '+(late?'bad':'ok')+'">'+(late?'Terlambat':'Tepat waktu')+'</span></div>'+
+      '<p class="hint">Terakhir dikirim '+esc(fmt(sub.at))+'. Anda boleh mengirim ulang sebelum tenggat.</p>'+
+      (fl?'<p>Berkas: '+fl+'</p>':'')+(lkh?'<p>Tautan: '+lkh+'</p>':'')+(sub.note?'<p>Catatan: '+esc(sub.note)+'</p>':'')+'</div>';
+  }
+  var fileField=S.assets?
+    '<label class="f" for="f-file">Berkas tugas <span class="hint">PDF, gambar (PNG, JPG, WebP), atau teks. Maksimal 20 MB.</span><input type="file" id="f-file" accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.txt,.csv,.md"></label>':
+    '<div class="note warn">Unggah berkas belum tersedia untuk akun Anda. Tempelkan tautan Google Drive atau OneDrive di bawah, dengan akses "siapa saja yang memiliki tautan dapat melihat".</div>';
+  var form=canSave()?
+    '<form class="card" id="f-tugas" novalidate><h3>Kumpulkan tugas</h3>'+
+    '<label class="f" for="f-name">Nama lengkap<input type="text" id="f-name" data-act="draft" data-k="fullName" value="'+esc(d.fullName)+'" autocomplete="name"></label>'+
+    fileField+
+    '<label class="f" for="f-link">Tautan berkas <span class="hint">Opsional jika sudah mengunggah berkas</span><input type="url" id="f-link" data-act="draft" data-k="link" value="'+esc(d.link)+'" placeholder="https://"></label>'+
+    '<label class="f" for="f-note">Catatan untuk pengajar <span class="hint">Opsional</span><textarea id="f-note" data-act="draft" data-k="note">'+esc(d.note)+'</textarea></label>'+
+    '<div class="row"><button class="btn" type="submit"'+(S.busy?' disabled':'')+'>'+(sub?'Kirim ulang':'Kirim tugas')+'</button><span class="hint" id="tmsg" role="status"></span></div></form>':
+    '<div class="note warn">Pengumpulan tugas memerlukan akun yang sudah masuk dan diizinkan berpartisipasi di kelas ini. Hubungi pengajar jika tombol kirim tidak muncul.</div>';
+  return '<section class="hero"><span class="eyebrow">Tugas 1 · bobot 50%</span><h1>Audit Cek Fakta dan Privasi Akun</h1>'+
+    '<div class="row">'+dl+'<span class="wk">Tenggat Jumat, 27 November 2026, 23.59 WIB</span></div></section>'+
+    '<div class="card"><h3>Instruksi</h3><ol class="steps">'+
+      '<li><b>Bagian A, cek fakta.</b> Pilih satu klaim viral dari media sosial atau pesan berantai. Terapkan empat langkah SIFT dan tulis temuan Anda dalam 1–2 halaman: klaimnya, siapa penyebar awalnya, liputan pembanding, dan kesimpulan Anda.</li>'+
+      '<li><b>Bagian B, privasi akun.</b> Tangkap layar pengaturan keamanan dan privasi satu akun Anda. Tutupi data pribadi seperti nomor telepon dan email. Jelaskan tiga hal yang Anda ubah dan alasannya.</li>'+
+      '<li><b>Gabungkan</b> kedua bagian menjadi satu berkas PDF, atau unggah gambar bila hanya berisi tangkapan layar. Cantumkan sumber dengan gaya APA.</li></ol></div>'+
+    '<div class="section"><h3>Rubrik penilaian</h3><div class="tablewrap"><table><thead><tr><th>Kriteria</th><th>Bobot</th></tr></thead><tbody>'+rub+'<tr><td><b>Total</b></td><td><b>100</b></td></tr></tbody></table></div></div>'+
+    status+form;
+}
+
+function viewPengumuman(){
+  var comp=S.isEditor?
+    '<form class="card" id="f-ann" novalidate><h3>Tulis pengumuman</h3>'+
+    '<label class="f" for="a-title">Judul<input type="text" id="a-title" data-act="adraft" data-k="t" value="'+esc(S.adraft.t)+'"></label>'+
+    '<label class="f" for="a-body">Isi pengumuman<textarea id="a-body" data-act="adraft" data-k="b">'+esc(S.adraft.b)+'</textarea></label>'+
+    '<div class="row"><button class="btn" type="submit">Terbitkan</button><span class="hint" id="amsg" role="status"></span></div></form>':'';
+  var list;
+  if(!S.db) list='<div class="empty">Pengumuman belum dapat dimuat di tampilan ini.</div>';
+  else if(!S.annLoaded) list='<div class="empty">'+(S.annSlow?'Pengumuman belum dapat dijangkau. Periksa koneksi Anda lalu tunggu sebentar.':'Memuat pengumuman…')+'</div>';
+  else if(!S.anns.length) list='<div class="empty">Belum ada pengumuman dari pengajar. Pengumuman baru akan tampil di sini.</div>';
+  else list=S.anns.map(function(a){
+    var del=S.isEditor?(S.armed===a.id?'<button class="btn danger" data-act="del-ann" data-id="'+esc(a.id)+'">Yakin hapus?</button>':'<button class="btn ghost" data-act="del-ann" data-id="'+esc(a.id)+'">Hapus</button>'):'';
+    return '<article class="card ann"><time>'+esc(fmt(a.createdAt))+'</time><h3>'+esc(a.title)+'</h3><p>'+esc(a.body)+'</p>'+(del?'<div class="row">'+del+'</div>':'')+'</article>';
+  }).join("");
+  return '<section class="hero"><span class="eyebrow">Pengumuman</span><h1>Kabar dan petunjuk kelas</h1></section>'+
+    '<details class="mod" open><summary><div class="mod-title"><span class="wk">Disematkan</span><h3>Petunjuk penggunaan LMS</h3></div><span class="chev" aria-hidden="true">&#9656;</span></summary>'+
+    '<div class="mod-body"><ol class="steps">'+
+      '<li>Buka tautan kelas dari ponsel, tablet, atau komputer, lalu masuk dengan akun Anda.</li>'+
+      '<li>Mulai dari <b>Beranda</b> untuk melihat deskripsi dan jadwal, lalu buka <b>Materi</b> dan baca satu modul per pekan.</li>'+
+      '<li>Centang <b>Tandai modul ini selesai</b> setelah membaca dan mencoba latihannya.</li>'+
+      '<li>Kerjakan <b>Kuis</b>. Anda boleh mengulang, dan nilai terbaik yang tersimpan.</li>'+
+      '<li>Kumpulkan <b>Tugas</b> sebelum Jumat, 27 November 2026 pukul 23.59 WIB. Anda bisa mengirim ulang sebelum tenggat.</li>'+
+      '<li>Buka halaman ini secara berkala untuk membaca pengumuman terbaru.</li></ol>'+
+      '<div class="pt"><h4>Jika ada kendala</h4><p>Tombol kirim tidak muncul: pastikan Anda sudah masuk dengan akun. Berkas gagal terunggah: periksa bahwa formatnya PDF, gambar, atau teks dan ukurannya tidak lebih dari 20 MB. Tanda selesai pada modul tersimpan di peramban, jadi tidak ikut berpindah ke perangkat lain.</p></div></div></details>'+
+    comp+'<div class="section">'+list+'</div>';
+}
+
+function nameOf(id,fallback,i){return S.names[id]||fallback||('Peserta '+(i+1))}
+function viewPengajar(){
+  if(!S.isEditor) return '<div class="empty">Halaman ini hanya untuk pengajar.</div>';
+  var at=S.allAttempts.slice().sort(function(a,b){return (b.at||0)-(a.at||0)});
+  var avg=at.length?Math.round(at.reduce(function(s,x){return s+(x.best||0)},0)/at.length):0;
+  var ss=S.allSubs.slice().sort(function(a,b){return (b.at||0)-(a.at||0)});
+  var late=ss.filter(function(x){return x.at>DEADLINE}).length;
+  var tA=at.length?at.map(function(x,i){return '<tr><td>'+esc(nameOf(x.id,"",i))+'</td><td>'+x.score+'</td><td>'+x.best+'</td><td>'+x.tries+'</td><td>'+esc(fmt(x.at))+'</td></tr>'}).join(""):'<tr><td colspan="5" class="hint">Belum ada peserta yang mengerjakan kuis.</td></tr>';
+  var tS=ss.length?ss.map(function(x,i){
+    var lk=safeUrl(x.link);
+    var ber=(x.assetId?'<a href="/_blob/'+esc(x.assetId)+'" target="_blank" rel="noopener">'+esc(x.fileName||"Berkas")+'</a>':'')+(x.assetId&&lk?'<br>':'')+(lk?'<a href="'+esc(lk)+'" target="_blank" rel="noopener noreferrer">Tautan</a>':'');
+    return '<tr><td>'+esc(nameOf(x.id,x.fullName,i))+'</td><td>'+(ber||'-')+'</td><td>'+esc(x.note||'')+'</td><td>'+esc(fmt(x.at))+'</td><td><span class="pill '+(x.at>DEADLINE?'bad':'ok')+'">'+(x.at>DEADLINE?'Terlambat':'Tepat waktu')+'</span></td></tr>';
+  }).join(""):'<tr><td colspan="5" class="hint">Belum ada tugas yang dikumpulkan.</td></tr>';
+  return '<section class="hero"><span class="eyebrow">Ruang pengajar</span><h1>Rekap nilai dan pengumpulan</h1><p class="lead">Hanya terlihat oleh pengajar. Data masuk otomatis saat peserta mengirim.</p></section>'+
+    '<div class="stats"><div class="stat"><b>'+at.length+'</b><span>Peserta mengerjakan kuis</span></div><div class="stat"><b>'+avg+'</b><span>Rata-rata nilai terbaik</span></div><div class="stat"><b>'+ss.length+'</b><span>Tugas terkumpul</span></div><div class="stat"><b>'+late+'</b><span>Terlambat</span></div></div>'+
+    '<section class="section"><h2>Nilai kuis</h2><div class="tablewrap"><table><thead><tr><th>Peserta</th><th>Terakhir</th><th>Terbaik</th><th>Percobaan</th><th>Waktu</th></tr></thead><tbody>'+tA+'</tbody></table></div></section>'+
+    '<section class="section"><h2>Tugas 1</h2><div class="tablewrap"><table><thead><tr><th>Peserta</th><th>Berkas</th><th>Catatan</th><th>Dikirim</th><th>Status</th></tr></thead><tbody>'+tS+'</tbody></table></div></section>';
+}
+S.adraft={t:"",b:""};
+
+var RENDER={beranda:viewBeranda,materi:viewMateri,kuis:viewKuis,tugas:viewTugas,pengumuman:viewPengumuman,pengajar:viewPengajar};
+
+function render(){
+  main.innerHTML=RENDER[S.view]();
+  document.querySelectorAll(".nav a").forEach(function(a){
+    if(a.dataset.v===S.view) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+  });
+  navP.hidden=!S.isEditor;
+}
+function renderIf(v){if(S.view===v) render()}
+function route(){
+  var v=(location.hash||"").replace("#","");
+  if(VIEWS.indexOf(v)<0||(v==="pengajar"&&!S.isEditor)) v="beranda";
+  var changed=v!==S.view; S.view=v; render();
+  if(changed) window.scrollTo(0,0);
+}
+
+/* ---------- Interaksi ---------- */
+function updateProgressUI(){
+  var n=progCount(), pct=Math.round(100*n/MODUL.length), p=loadProg();
+  document.querySelectorAll("[data-prog-text]").forEach(function(e){e.textContent=n+" dari "+MODUL.length+" modul selesai"});
+  document.querySelectorAll("[data-prog-bar]").forEach(function(e){e.style.width=pct+"%"; if(e.parentNode) e.parentNode.setAttribute("aria-valuenow",pct)});
+  MODUL.forEach(function(m){var e=document.querySelector('[data-done-pill="'+m.id+'"]'); if(e) e.hidden=!p[m.id]});
+}
+
+main.addEventListener("change",function(e){
+  var t=e.target, act=t.dataset&&t.dataset.act;
+  if(act==="toggle"){var p=loadProg(); p[t.dataset.id]=t.checked; saveProg(p); updateProgressUI();}
+  if(act==="answer"){
+    S.ans[+t.dataset.q]=+t.value;
+    var c=S.ans.filter(function(x){return x!==null}).length, el=document.getElementById("qcount");
+    if(el) el.textContent=c+" dari "+QUIZ.length+" soal terjawab";
+  }
+});
+main.addEventListener("input",function(e){
+  var t=e.target, act=t.dataset&&t.dataset.act;
+  if(act==="draft") S.draft[t.dataset.k]=t.value;
+  if(act==="adraft") S.adraft[t.dataset.k]=t.value;
+});
+
+main.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]"); if(!b) return;
+  var act=b.dataset.act;
+  if(act==="submit-quiz") submitQuiz();
+  else if(act==="reset-quiz"){S.ans=QUIZ.map(function(){return null}); S.graded=false; S.saveMsg=""; render(); window.scrollTo(0,0)}
+  else if(act==="del-ann") delAnn(b.dataset.id);
+});
+main.addEventListener("submit",function(e){
+  e.preventDefault();
+  if(e.target.id==="f-tugas") submitTugas();
+  if(e.target.id==="f-ann") postAnn();
+});
+
+function say(id,msg,cls){var el=document.getElementById(id); if(!el) return; el.textContent=msg; el.className=cls||"hint"}
+
+async function submitQuiz(){
+  var left=S.ans.filter(function(x){return x===null}).length;
+  if(left){var m=document.getElementById("qmsg"); if(m) m.innerHTML='<div class="note warn">Masih ada '+left+' soal yang belum dijawab.</div>'; return}
+  var correct=0; QUIZ.forEach(function(q,i){if(S.ans[i]===q.a) correct++});
+  var score=Math.round(100*correct/QUIZ.length);
+  S.graded=true; S.saveMsg="";
+  if(canSave()){
+    try{
+      var prev=S.attempt||{best:0,tries:0};
+      await S.db.doc("attempts/"+S.uid).set({score:score,best:Math.max(prev.best||0,score),tries:(prev.tries||0)+1,answers:S.ans.slice(),at:Date.now()});
+      S.saveMsg="Nilai tersimpan dan terlihat oleh pengajar.";
+    }catch(err){S.saveMsg="Nilai belum tersimpan ("+(err&&err.code?err.code:"gangguan")+"). Coba kirim ulang nanti."}
+  }else S.saveMsg="Nilai tidak disimpan karena Anda belum masuk dengan akun yang diizinkan.";
+  render(); window.scrollTo(0,0);
+}
+
+function errText(code){
+  return {too_large:"Berkas lebih dari 20 MB.",unsupported_type:"Format berkas tidak didukung. Pakai PDF, gambar, atau teks.",quota_or_state:"Penyimpanan kelas penuh. Hubungi pengajar.",rate_limited:"Terlalu sering mengirim. Tunggu sebentar lalu coba lagi.",store_unavailable:"Layanan sedang sibuk. Coba lagi sebentar."}[code]||"Pengiriman gagal. Coba lagi."
+}
+
+async function submitTugas(){
+  if(S.busy) return;
+  var d=S.draft, input=document.getElementById("f-file"), file=input&&input.files&&input.files[0];
+  var link=(d.link||"").trim();
+  if(!(d.fullName||"").trim()){say("tmsg","Isi nama lengkap Anda.","hint"); document.getElementById("f-name").focus(); return}
+  if(link&&!safeUrl(link)){say("tmsg","Tautan harus diawali https://","hint"); document.getElementById("f-link").focus(); return}
+  if(!file&&!link&&!(S.submission&&S.submission.assetId)){say("tmsg",S.assets?"Pilih berkas atau tempel tautan.":"Tempel tautan berkas Anda.","hint"); return}
+  S.busy=true; say("tmsg","Mengirim…","hint");
+  var btn=document.querySelector("#f-tugas button[type=submit]"); if(btn) btn.disabled=true;
+  try{
+    var rec={fullName:d.fullName.trim(),note:(d.note||"").trim(),link:link,at:Date.now(),assetId:"",fileName:"",fileSize:0};
+    if(S.submission&&S.submission.assetId){rec.assetId=S.submission.assetId; rec.fileName=S.submission.fileName||""; rec.fileSize=S.submission.fileSize||0}
+    if(file){
+      if(!S.assets) throw {code:"unsupported_type"};
+      var ext=(file.name.split(".").pop()||"").toLowerCase(), type=FILE_TYPES[ext];
+      if(!type) throw {code:"unsupported_type"};
+      var up=await S.assets.upload(file,{type:type});
+      rec.assetId=up.id; rec.fileName=file.name; rec.fileSize=up.sizeBytes;
+    }
+    await S.db.doc("submissions/"+S.uid).set(rec);
+    S.busy=false; S.draftInit=true; render();
+    say("tmsg","Tugas terkirim "+fmt(rec.at)+".","hint");
+  }catch(err){
+    S.busy=false; if(btn) btn.disabled=false;
+    say("tmsg",errText(err&&err.code),"hint");
+  }
+}
+
+async function postAnn(){
+  var t=(S.adraft.t||"").trim(), b=(S.adraft.b||"").trim();
+  if(!t||!b){say("amsg","Judul dan isi wajib diisi.","hint"); return}
+  try{
+    say("amsg","Menerbitkan…","hint");
+    await S.db.collection("announcements").add({title:t,body:b,createdAt:Date.now()});
+    S.adraft={t:"",b:""}; render(); say("amsg","Pengumuman terbit.","hint");
+  }catch(err){say("amsg","Gagal menerbitkan. Coba lagi.","hint")}
+}
+async function delAnn(id){
+  if(S.armed!==id){S.armed=id; render(); return}
+  S.armed="";
+  try{await S.db.doc("announcements/"+id).delete()}catch(err){render()}
+}
+
+/* ---------- Data bersama ---------- */
+function snapDocs(snap){return snap.docs.map(function(d){var x=d.data()||{}; x.id=d.id; return x})}
+async function resolveNames(ids){
+  if(!S.user||!ids.length) return;
+  try{var ps=await S.user.profiles(ids); ids.forEach(function(id){if(ps[id]&&ps[id].name) S.names[id]=ps[id].name}); renderIf("pengajar")}catch(e){}
+}
+function subscribe(){
+  var db=S.db; if(!db) return;
+  var slow=setTimeout(function(){if(!S.annLoaded){S.annSlow=true; renderIf("pengumuman")}},10000);
+  db.collection("announcements").orderBy("createdAt","desc").limit(50).onSnapshot(function(snap){
+    clearTimeout(slow); S.anns=snapDocs(snap); S.annLoaded=true; if(S.view==="pengumuman"&&document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return; renderIf("pengumuman");
+  },function(){clearTimeout(slow); S.annLoaded=true; S.annSlow=true; renderIf("pengumuman")});
+  if(S.uid){
+    db.doc("attempts/"+S.uid).onSnapshot(function(s){S.attempt=s.exists?s.data():null; if(S.view==="beranda"||(S.view==="kuis"&&!S.graded&&document.activeElement===document.body)) render()},function(){});
+    db.doc("submissions/"+S.uid).onSnapshot(function(s){
+      S.submission=s.exists?s.data():null;
+      if(S.submission&&!S.draftInit){S.draft={fullName:S.submission.fullName||"",note:S.submission.note||"",link:S.submission.link||""}; S.draftInit=true}
+      if(S.view==="beranda"||(S.view==="tugas"&&document.activeElement===document.body)) render();
+    },function(){});
+  }
+  if(S.isEditor){
+    db.collection("attempts").onSnapshot(function(snap){S.allAttempts=snapDocs(snap); resolveNames(S.allAttempts.map(function(x){return x.id})); renderIf("pengajar")},function(){});
+    db.collection("submissions").onSnapshot(function(snap){S.allSubs=snapDocs(snap); resolveNames(S.allSubs.map(function(x){return x.id})); renderIf("pengajar")},function(){});
+  }
+}
+
+async function init(){
+  window.addEventListener("hashchange",route);
+  route();
+  var c=window.claude; if(!c||!c.use) return;
+  try{S.user=await c.use("user")}catch(e){}
+  if(S.user){
+    try{S.uid=await S.user.id(); var me=await S.user.me(); S.draft.fullName=me.name||""; S.isEditor=await S.user.canEdit(); S.canWrite=await S.user.can("data.write")}catch(e){}
+  }
+  try{S.db=await c.use("db")}catch(e){}
+  try{S.assets=await c.use("assets")}catch(e){}
+  subscribe(); route();
+}
+init();
+})();
+</script>
+
+</body></html>
